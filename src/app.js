@@ -22,12 +22,13 @@ import healthCheckRouter from "./routes/healthcheck.routes.js"
 import userRouter from "./routes/user.routes.js"
 import { errorHandler } from "./middlewares/error.middlewares.js"
 //import logoutRouter from "./routes/user.routes.js"
+import videoRouter from "./routes/video.routes.js"
 
 
 //routes
 app.use("/api/v1/healthcheck", healthCheckRouter)
 app.use("/api/v1/users", userRouter)
 //app.use("'api/v1/users", logoutRouter)
-
+app.use("/api/v1/videos", videoRouter)
 //app.use(errorHandler)
 export { app }

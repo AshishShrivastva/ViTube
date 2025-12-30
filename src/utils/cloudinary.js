@@ -42,4 +42,24 @@ const deleteFromCloudinary = async (publicId) => {
     }
 }
 
-export { uploadOnCloudinary, deleteFromCloudinary }
+// Helper function to extract public_id from Cloudinary URL
+const extractPublicIdFromUrl = (url) => {
+    if (!url) return null
+    try {
+        // Cloudinary URL format: https://res.cloudinary.com/{cloud_name}/{resource_type}/upload/v{version}/{public_id}.{format}
+        // or: https://res.cloudinary.com/{cloud_name}/{resource_type}/upload/{public_id}
+        const parts = url.split('/upload/')
+        if (parts.length < 2) return null
+        let publicIdPart = parts[1]
+        // Remove version prefix if present (v1234567890/)
+        publicIdPart = publicIdPart.replace(/^v\d+\//, '')
+        // Remove file extension
+        publicIdPart = publicIdPart.replace(/\.[^.]*$/, '')
+        return publicIdPart
+    } catch (error) {
+        console.log("Error extracting public_id from URL", error)
+        return null
+    }
+}
+
+export { uploadOnCloudinary, deleteFromCloudinary, extractPublicIdFromUrl }

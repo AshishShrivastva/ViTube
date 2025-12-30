@@ -6,8 +6,16 @@ const videoSchema = new Schema({
         type: String,           //cloudinary url
         required: true
     },
+    videoFilePublicId: {
+        type: String,           //cloudinary public_id for deletion
+        required: true
+    },
     thumbnail: {
         type: String,           //cloudinary url
+        required: true
+    },
+    thumbnailPublicId: {
+        type: String,           //cloudinary public_id for deletion
         required: true
     },
     title: {
@@ -24,7 +32,7 @@ const videoSchema = new Schema({
     },
     views: {
         type: Number,
-        defualt: 0
+        default: 0
     },
     isPublished: {
         type: Boolean,
