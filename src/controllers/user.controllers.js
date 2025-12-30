@@ -4,6 +4,7 @@ import { User } from "../models/user.models.js"
 import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
+import mongoose from "mongoose"
 
 //generating access and refresh tokens
 const generateAccessAndRefreshToken = async(userId) => {
@@ -118,7 +119,7 @@ const registerUser = asyncHandler(async(req,res) => {
 })
 
 //user login
-const loginUser = asyncHandler(async(req, res) => {
+const loginUser = asyncHandler(async function(req, res) {
     //get data from body
     const {email, username, password} = req.body
 
@@ -222,8 +223,8 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
 
         return res
             .status(200)
-            .cookies("accessToken", accessToken, options)
-            .cookies("refreshToken", newRefreshToken, options)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", newRefreshToken, options)
             .json(
                 new ApiResponse(
                     200,
@@ -292,7 +293,7 @@ const updateUserAvatar = asyncHandler(async(req, res) => {
     const avatarLocalPath = req.file?.path
 
     if(!avatarLocalPath){
-        throw new ApiResponse(400, "File is required!")
+        throw new ApiError(400, "File is required!")
     }
 
     const avatar = await uploadOnCloudinary(avatarLocalPath)
@@ -313,7 +314,7 @@ const updateUserAvatar = asyncHandler(async(req, res) => {
 
     return res
         .status(200)
-        .json(200, user, "Avatar updated successfully!")
+        .json(new ApiResponse(200, user, "Avatar updated successfully!"))
 })
 
 const updateUserCoverImage = asyncHandler(async(req, res) => {
@@ -418,7 +419,7 @@ const getWatchHistory = asyncHandler(async(req, res) => {
         {
             $lookup: {
                 from: "videos",
-                localField: "watchHisory",
+                localField: "watchHistory",
                 foreignField: "_id",
                 as: "watchHistory",
                 pipeline: [
@@ -457,7 +458,7 @@ const getWatchHistory = asyncHandler(async(req, res) => {
 
     return res
         .status(200)
-        .json(200, user[0]?.getWatchHistory, "Watch history fetched successfully!")
+        .json(new ApiResponse(200, user[0]?.watchHistory, "Watch history fetched successfully!"))
 })
 
 export { 
