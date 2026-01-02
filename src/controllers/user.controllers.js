@@ -461,6 +461,30 @@ const getWatchHistory = asyncHandler(async(req, res) => {
         .json(new ApiResponse(200, user[0]?.watchHistory, "Watch history fetched successfully!"))
 })
 
+const clearWatchHistory = asyncHandler(async(req, res) => {
+    // 1. Check if user is logged in (handled by verifyJWT usually, but safety check)
+    if (!req.user?._id) {
+        throw new ApiError(401, "Unauthorized request");
+    }
+
+    // 2. Find user and empty the watchHistory array
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set: {
+                watchHistory: [] // Set to empty array
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Watch History Cleared Successfully"))
+})
+
 export { 
     registerUser,
     loginUser,
@@ -472,5 +496,6 @@ export {
     updateUserAvatar,
     updateUserCoverImage,
     getUserChannelProfile,
-    getWatchHistory 
+    getWatchHistory, 
+    clearWatchHistory
  }

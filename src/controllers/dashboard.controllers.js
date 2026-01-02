@@ -104,13 +104,39 @@ const getChannelVideos = asyncHandler(async (req, res) => {
         throw new ApiError(401, "Unauthorized access!")
     }
 
-    const ownerObjectId = new mongoose.Types.ObjectId(userId)
-
-    const videos = await Video.find({
-        owner: ownerObjectId,
-    }).sort({
-        createdAt: -1,
-    })
+    const videos = await Video.aggregate([
+        //Finds videos owned by the current user
+        {
+            $match: {
+                owner: new mongoose.Types.ObjectId(userId)
+            }
+        },
+        {
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "video",
+                as: "likes"
+            }
+        },
+        //'likesCount' field by counting
+        {
+            $addFields: {
+                likesCount: { $size: "$likes" }
+            }
+        },
+        //Sort by newest first
+        {
+            $sort: {
+                createdAt: -1
+            }
+        },
+        {
+            $project: {
+                likes: 0
+            }
+        }
+    ])
 
     return res
         .status(200)
@@ -126,4 +152,4 @@ const getChannelVideos = asyncHandler(async (req, res) => {
 export {
     getChannelStats, 
     getChannelVideos
-    }
+}
