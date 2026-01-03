@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Outlet } from 'react-router-dom';
+import axios from 'axios';
+import { login, logout } from './store/authSlice';
+import conf from './conf/conf';
+import { Loader2 } from 'lucide-react';
+import Header from './components/Header/Header';
+import Sidebar from './components/Header/Sidebar';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    axios.get(`${conf.backendUrl}/users/current-user`)
+      .then((userData) => {
+        if (userData.data.data) {
+          dispatch(login(userData.data.data));
+        } else {
+          dispatch(logout());
+        }
+      })
+      .catch(() => dispatch(logout()))
+      .finally(() => setLoading(false));
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-[#0F0F0F] text-white">
+        <Loader2 className="animate-spin text-purple-500" size={40} />
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen bg-[#0F0F0F] text-white font-sans">
+      <Header />
+      <div className="flex pt-16">
+          <Sidebar />
+          <main className="flex-1 p-4 md:ml-64 min-h-screen">
+             <Outlet />
+          </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
