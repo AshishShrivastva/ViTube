@@ -9,20 +9,30 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 // Pages
 import Login from './pages/Login.tsx';
 import Signup from './pages/Signup.tsx';
-import Home from './pages/Home.tsx'; // Import Home
-import AddVideo from './pages/AddVideo.tsx'; // Import AddVideo
-import VideoDetail from './pages/VideoDetail.tsx'; // Import VideoDetail
-import ChannelProfile from './pages/ChannelProfile.tsx'; // Import ChannelProfile
-import MyContent from './pages/MyContent.tsx'; // Import MyContent
-import LikedVideos from './pages/LikedVideos.tsx'; // Import LikedVideos
-import History from './pages/History.tsx'; // Import History
-import Tweets from './pages/Tweets.tsx'; // Import Tweets
-import Subscribers from './pages/Subscribers.tsx'; // Import Subscribers
-import Playlists from './pages/Playlists.tsx'; // Import Playlists
+import Home from './pages/Home.tsx'; 
+import AddVideo from './pages/AddVideo.tsx'; 
+import VideoDetail from './pages/VideoDetail.tsx'; 
+import ChannelProfile from './pages/ChannelProfile.tsx'; 
+import MyContent from './pages/MyContent.tsx'; 
+import LikedVideos from './pages/LikedVideos.tsx'; 
+import History from './pages/History.tsx'; 
+import Tweets from './pages/Tweets.tsx'; 
+import Subscribers from './pages/Subscribers.tsx'; 
+import Playlists from './pages/Playlists.tsx'; 
 import PlaylistDetail from './pages/PlaylistDetail.tsx';
 import Settings from './pages/Settings.tsx';
 
 const router = createBrowserRouter([
+  // 1. Standalone Pages (No Sidebar/Navbar)
+  {
+      path: "/login",
+      element: <Login />
+  },
+  {
+      path: "/signup",
+      element: <Signup />
+  },
+  // 2. Main App Pages (Wrapped in App layout with Sidebar/Navbar)
   {
     path: "/",
     element: <App />,
@@ -30,14 +40,6 @@ const router = createBrowserRouter([
         {
             path: "/",
             element: <Home />,
-        },
-        {
-            path: "/login",
-            element: <Login />
-        },
-        {
-            path: "/signup",
-            element: <Signup />
         },
         {
             path: "/add-video",
