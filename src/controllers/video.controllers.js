@@ -8,7 +8,7 @@ import {uploadOnCloudinary, deleteFromCloudinary, extractPublicIdFromUrl} from "
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, query, sortBy = "createdAt", sortType = "desc", userId } = req.query
+    const { page = 1, limit = 20, query, sortBy = "createdAt", sortType = "desc", userId } = req.query
 
     // Build match stage for aggregation pipeline
     const matchStage = {}
